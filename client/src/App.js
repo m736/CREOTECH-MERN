@@ -1,11 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import "./App.css";
+import ExcelUpload from "./Component/ExcelUpload";
+import NavBar from "./Component/NavBar";
 
 function App() {
   return (
-    <div className="App">
-    hello
-    </div>
+    <>
+      <BrowserRouter>
+        <NavBar />
+        <div className="pages">
+          <Routes>
+            <Route exact path="/" element={<ExcelUpload />} />
+            {/* <Route path="/about" element={<About />} /> */}
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </>
   );
 }
 
