@@ -45,6 +45,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  margin-top: -100px;
 }
 
 * {
@@ -57,7 +58,8 @@ body {
 }
 
 .pages {
-  margin-top: 10%;
+  color: #316685;
+  margin-top: 1%;
 }
 
 .navbar {

@@ -58,7 +58,6 @@ function ExcelUpload() {
         });
         setLoading(false);
         setExcelRows(json);
-        console.log(json);
       };
       reader.readAsArrayBuffer(file);
     }
@@ -132,7 +131,7 @@ function ExcelUpload() {
     setExcelRows([]);
     window.location.reload();
   };
-  console.log(rows);
+
   return (
     <Fragment>
       {loading && (
