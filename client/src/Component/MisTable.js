@@ -3,11 +3,16 @@ import { Button, Row, Table } from "antd";
 import { useEffect, useState } from "react";
 import { Excel } from "antd-table-saveas-excel";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getVechicle } from "../action/getVehicleAction";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
 const MisTable = ({ data }) => {
+  const history = useNavigate();
+  const dispatch = useDispatch();
   const [bordered, setBordered] = useState(true);
   const tableProps = {
     bordered,
@@ -132,14 +137,16 @@ const MisTable = ({ data }) => {
       .saveAs("Excel.xlsx");
   };
   const deleteStudent = () => {
-    axios
-      .delete("http://localhost:4000/bulk/delete-vehiclelist", { data: data })
-      .then((res) => {
-        alert("Vehicle successfully deleted!");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      const { res } = axios.delete(
+        "http://localhost:4000/bulk/delete-vehiclelist",
+        { data: data }
+      );
+      alert(`${data.length} vechicle data deleted successfully`);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>
