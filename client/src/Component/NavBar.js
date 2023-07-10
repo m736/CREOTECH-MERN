@@ -38,6 +38,28 @@ function NavBar() {
                 Mis Table
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink
+                exact
+                to="/vehicle_list"
+                activeClassName="active"
+                className="nav-links"
+                onClick={click ? handleClick : null}
+              >
+                Vehicle List
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                exact
+                to="/add_vechicle"
+                activeClassName="active"
+                className="nav-links"
+                onClick={click ? handleClick : null}
+              >
+                Add Vehicle
+              </NavLink>
+            </li>
           </ul>
           <div className="nav-icon" onClick={handleClick}>
             <i className={click ? "fa fa-times" : "fa fa-bars"}></i>

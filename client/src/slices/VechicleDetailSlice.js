@@ -17,6 +17,7 @@ const VechicleDetailSlice = createSlice({
       "End Location",
     ],
     vechicle: [],
+    addvechicle: {},
   },
   reducers: {
     vechicleRequest(state, action) {
@@ -38,38 +39,30 @@ const VechicleDetailSlice = createSlice({
         error: action.payload,
       };
     },
-    // bulkUpdateRequest(state, action) {
-    //     return {
-    //         ...state,
-    //         loading: true
-    //     }
+    // vechicleListRequest(state, action) {
+    //   return {
+    //     ...state,
+    //     loading: true,
+    //   };
     // },
-    // bulkUpdateSuccess(state, action) {
-    //     return {
-    //         ...state,
-    //         loading: false,
-    //         bulkupdate: action.payload.message,
-
-    //     }
+    // vechicleListSuccess(state, action) {
+    //   return {
+    //     ...state,
+    //     loading: false,
+    //     addVechicle: action.payload.addvechicle,
+    //   };
     // },
-    // bulkUpdateFail(state, action) {
-    //     return {
-    //         loading: false,
-    //         error: action.payload
-    //     }
+    // vechicleListFail(state, action) {
+    //   return {
+    //     loading: false,
+    //     error: action.payload,
+    //   };
     // },
   },
 });
 
 const { actions, reducer } = VechicleDetailSlice;
 
-export const {
-  vechicleRequest,
-  vechicleSuccess,
-  vechicleFail,
-  // bulkUpdateRequest,
-  // bulkUpdateSuccess,
-  // bulkUpdateFail
-} = actions;
+export const { vechicleRequest, vechicleSuccess, vechicleFail } = actions;
 
 export default reducer;

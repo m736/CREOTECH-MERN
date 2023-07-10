@@ -189,3 +189,24 @@ body {
     color: #ffdd40;
   }
 }
+
+:where(.css-dev-only-do-not-override-1wazalj).ant-form-item
+  .ant-form-item-label
+  > label {
+  width: 25vh;
+}
+.driverdetails .ant-form-item .ant-form-item-label > label {
+  color: white;
+}
+.checked_input {
+  border: 3px solid #e2c7e3;
+  padding: 10px;
+  border-radius: 3px;
+  background: #e2c7e3;
+  width: 80%;
+}
+.editable-row .ant-form-item-explain {
+  position: absolute;
+  top: 100%;
+  font-size: 12px;
+}
