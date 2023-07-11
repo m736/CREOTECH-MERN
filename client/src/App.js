@@ -13,17 +13,9 @@ import {
 } from "./slices/VechicleDetailSlice";
 import axios from "axios";
 import VehicleList from "./Vehicle/VehicleList";
-import {
-  addVehicleFail,
-  addVehicleRequest,
-  addVehicleSuccess,
-  getVehicleListFail,
-  getVehicleListRequest,
-  getVehicleListSuccess,
-} from "./slices/VehicleInductionSlice";
+
 import AddVehicleList from "./Vehicle/AddVehicleList";
 import { ToastContainer, toast } from "react-toastify";
-import UpdateVehicleList from "./Vehicle/UpdateVehicleList";
 function App() {
   const [rows, setRows] = useState([]);
   const dispatch = useDispatch();
@@ -38,27 +30,15 @@ function App() {
       dispatch(vechicleFail());
     }
   }, [dispatch]);
-  const fetchVehicleListData = useCallback(async () => {
-    try {
-      dispatch(getVehicleListRequest());
-      const { data } = await axios.get(
-        "http://localhost:4000/api/v1/vehicle_list"
-      );
-      console.log(data);
-      dispatch(getVehicleListSuccess(data));
-    } catch (error) {
-      dispatch(getVehicleListFail());
-    }
-  }, [dispatch]);
+
   useEffect(() => {
     fetchData();
-    fetchVehicleListData();
   }, [fetchData]);
 
   return (
     <>
       <BrowserRouter>
-        {/* <NavBar /> */}
+        <NavBar />
 
         <div className="pages">
           <ToastContainer theme="dark" />
@@ -66,8 +46,8 @@ function App() {
             <Route exact path="/" element={<ExcelUpload />} />
             <Route path="/tabledata" element={<FormSelect />} />
             <Route path="/add_vechicle" element={<AddVehicleList />} />
-            <Route path="/vechicle-list" element={<VehicleList />} />
-            <Route path="/update_vehicle/:id" element={<UpdateVehicleList />} />
+            <Route path="/vehicle_list" element={<VehicleList />} />
+            {/* <Route path="/update_vehicle/:id" element={<UpdateVehicleList />} /> */}
           </Routes>
         </div>
       </BrowserRouter>

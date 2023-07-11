@@ -5,31 +5,140 @@ import {
   Image,
   Input,
   InputNumber,
-  Modal,
   Popconfirm,
   Table,
   Typography,
   Upload,
 } from "antd";
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { StarOutlined, UploadOutlined } from "@ant-design/icons";
+import { updateVehicleList } from "../action/getVehicleAction";
 import {
+  clearError,
+  clearUpdateVehicleListCreated,
   getVehicleListFail,
   getVehicleListRequest,
   getVehicleListSuccess,
 } from "../slices/VehicleInductionSlice";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+const EditableCell = ({
+  editing,
+  dataIndex,
+  title,
+  inputType,
+  record,
+  index,
+  children,
+  ...restProps
+}) => {
+  const filename = record?.PUC;
+  const imagefile = filename?.substring(
+    filename?.lastIndexOf("/") + 1,
+    filename?.length
+  );
 
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { updateVehicleList } from "../action/getVehicleAction";
+  const [fileList, setFileList] = useState([
+    {
+      name: `${imagefile ? imagefile : null}`,
+    },
+  ]);
+  const handleChange = (info) => {
+    let newFileList = [...info.fileList];
 
+    newFileList = newFileList.slice(-1);
+    newFileList = newFileList.map((file) => {
+      if (file.response) {
+        file.url = file.response.url;
+      }
+      return file;
+    });
+    setFileList(newFileList);
+  };
+
+  const getFile = (e) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+
+    return e && e?.fileList[0]?.originFileObj;
+  };
+  const inputNode =
+    inputType === "file" ? (
+      <>
+        <Form.Item
+          name={dataIndex}
+          style={{
+            margin: 0,
+          }}
+          getValueFromEvent={getFile}
+        >
+          <Upload
+            onChange={handleChange}
+            defaultFileList={fileList}
+            fileList={fileList}
+          >
+            <Button>Upload</Button>
+          </Upload>
+        </Form.Item>
+      </>
+    ) : (
+      <Input />
+    );
+  return (
+    <td {...restProps}>
+      {editing ? (
+        <Form.Item
+          name={dataIndex}
+          style={{
+            margin: 0,
+          }}
+          rules={[
+            {
+              required: true,
+              message: `Please Input ${title}!`,
+            },
+          ]}
+        >
+          {inputNode}
+        </Form.Item>
+      ) : (
+        children
+      )}
+    </td>
+  );
+};
 const VehicleList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {
+    vehiclelist = [],
+    isVehicleListUpdated,
+    loading,
+    error,
+  } = useSelector((state) => state.VechicleInductionState);
+  console.log(vehiclelist);
   const [data, setData] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingVehicleList, setEditingVehicleList] = useState(null);
-  const fetchVehicleListData = useCallback(async () => {
+
+  const [form] = Form.useForm();
+
+  const [editingKey, setEditingKey] = useState("");
+  const isEditing = (record) => record.key === editingKey;
+  const edit = (record) => {
+    form.setFieldsValue({
+      Registration_No: "",
+      Vehicle_Type: "",
+      PUC: "",
+      Model: "",
+      ...record,
+    });
+    setEditingKey(record.key);
+  };
+  const cancel = () => {
+    setEditingKey("");
+  };
+  const fetchVehicleListData = async () => {
     try {
       dispatch(getVehicleListRequest());
       const { data } = await axios.get(
@@ -40,21 +149,59 @@ const VehicleList = () => {
       setData(
         data.map((vehicle) => ({
           key: vehicle._id,
-          id: vehicle._id,
           Registration_No: vehicle.vehicle_regnumber,
-          PCC: vehicle.vehicle_puc,
+          PUC: vehicle.vehicle_puc,
           Vehicle_Type: vehicle.vehicle_type,
           Model: vehicle.vehicle_model,
         }))
       );
+      setEditingKey("");
     } catch (error) {
       dispatch(getVehicleListFail());
     }
-  }, [dispatch]);
+  };
   useEffect(() => {
     fetchVehicleListData();
-  }, [fetchVehicleListData]);
+  }, []);
+  const save = async (key) => {
+    try {
+      const row = await form.validateFields();
+      const formData = new FormData();
+      formData.append("vehicle_regnumber", row.Registration_No);
+      formData.append("vehicle_type", row.Vehicle_Type);
+      formData.append("vehicle_model", row.Model);
+      formData.append("vehicle_puc", row.PUC);
+      dispatch(updateVehicleList(key, formData));
+      setTimeout(() => {
+        fetchVehicleListData();
+      }, 1000);
+    } catch (errInfo) {
+      console.log("Validate Failed:", errInfo);
+    }
+  };
 
+  useEffect(() => {
+    if (isVehicleListUpdated) {
+      toast("Vehicle Updated Succesfully!", {
+        type: "success",
+        position: toast.POSITION.BOTTOM_CENTER,
+        onOpen: () => dispatch(clearUpdateVehicleListCreated()),
+      });
+
+      return;
+    }
+
+    if (error) {
+      toast(error, {
+        position: toast.POSITION.BOTTOM_CENTER,
+        type: "error",
+        onOpen: () => {
+          dispatch(clearError());
+        },
+      });
+      return;
+    }
+  }, [isVehicleListUpdated, error, dispatch]);
   const columns = [
     {
       title: "Registration_No",
@@ -68,10 +215,11 @@ const VehicleList = () => {
       editable: true,
     },
     {
-      title: "PCC",
-      dataIndex: "PCC",
+      title: "PUC",
+      dataIndex: "PUC",
       maxWidth: 50,
-      render: (t, r) => <Image src={r.PCC} />,
+      render: (t, r) => <Image src={r.PUC} />,
+      editable: true,
     },
 
     {
@@ -83,98 +231,68 @@ const VehicleList = () => {
       title: "operation",
       dataIndex: "operation",
       render: (_, record) => {
-        return (
-          <>
-            <EditOutlined
-              onClick={() => {
-                onEditStudent(record);
+        const editable = isEditing(record);
+        return editable ? (
+          <span>
+            <Typography.Link
+              onClick={() => save(record.key)}
+              style={{
+                marginRight: 8,
               }}
-            />
-            <DeleteOutlined style={{ color: "red", marginLeft: 12 }} />
-          </>
+            >
+              Save
+            </Typography.Link>
+            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+              <a>Cancel</a>
+            </Popconfirm>
+          </span>
+        ) : (
+          <Typography.Link
+            disabled={editingKey !== ""}
+            onClick={() => edit(record)}
+          >
+            Edit
+          </Typography.Link>
         );
       },
     },
   ];
-  const onEditStudent = (record) => {
-    setIsEditing(true);
-    setEditingVehicleList({ ...record });
-  };
-  const resetEditing = () => {
-    setIsEditing(false);
-    setEditingVehicleList(null);
-  };
-  const [fileList, setFileList] = useState([
-    {
-      uid: "-1",
-      name: "xxx.png",
-      status: "done",
-    },
-  ]);
+  const mergedColumns = columns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        inputType: col.dataIndex === "PUC" ? "file" : "text",
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: isEditing(record),
+      }),
+    };
+  });
+  // var copy = JSON.parse(JSON.stringify(data));
   return (
     <>
       <div className="container">
-        <Table bordered dataSource={data} columns={columns} />
-        <Modal
-          title="Edit Vehicle"
-          open={isEditing}
-          okText="Save"
-          onCancel={() => {
-            resetEditing();
-          }}
-          onOk={() => {
-            setData((pre) => {
-              return pre.map((vehicle) => {
-                if (vehicle.id === editingVehicleList.id) {
-                  console.log(editingVehicleList);
-                  const formData = new FormData();
-                  formData.append(
-                    "vehicle_regnumber",
-                    editingVehicleList.Registration_No
-                  );
-                  formData.append(
-                    "vehicle_type",
-                    editingVehicleList.Vehicle_Type
-                  );
-                  formData.append("vehicle_model", editingVehicleList.Model);
-                  dispatch(updateVehicleList(editingVehicleList.key, formData));
-                  return editingVehicleList;
-                } else {
-                  return vehicle;
-                }
-              });
-            });
-            resetEditing();
-          }}
-        >
-          <Input
-            value={editingVehicleList?.Registration_No}
-            onChange={(e) => {
-              setEditingVehicleList((pre) => {
-                return { ...pre, Registration_No: e.target.value };
-              });
+        <Form form={form} component={false}>
+          <Table
+            components={{
+              body: {
+                cell: EditableCell,
+              },
+            }}
+            bordered
+            dataSource={data}
+            columns={mergedColumns}
+            rowClassName="editable-row"
+            pagination={{
+              onChange: cancel,
             }}
           />
-          <Input
-            value={editingVehicleList?.Vehicle_Type}
-            onChange={(e) => {
-              setEditingVehicleList((pre) => {
-                return { ...pre, Vehicle_Type: e.target.value };
-              });
-            }}
-          />
-          <Input
-            value={editingVehicleList?.Model}
-            onChange={(e) => {
-              setEditingVehicleList((pre) => {
-                return { ...pre, Model: e.target.value };
-              });
-            }}
-          />
-          <Upload showUploadList={true} fileList={fileList}>
-            <Button>Upload File</Button>
-          </Upload>
-        </Modal>
+        </Form>
       </div>
     </>
   );

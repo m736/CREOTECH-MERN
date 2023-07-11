@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 const VechicleDetailSlice = createSlice({
-  name: "product",
+  name: "mis_vehicle",
   initialState: {
     loading: false,
     requiredFields: [
@@ -16,8 +16,7 @@ const VechicleDetailSlice = createSlice({
       "Start Location",
       "End Location",
     ],
-    vechicle: [],
-    addvechicle: {},
+    misvehicle_list: [],
   },
   reducers: {
     vechicleRequest(state, action) {
@@ -30,7 +29,7 @@ const VechicleDetailSlice = createSlice({
       return {
         ...state,
         loading: false,
-        vechicle: action.payload,
+        misvehicle_list: action.payload,
       };
     },
     vechicleFail(state, action) {
@@ -39,25 +38,6 @@ const VechicleDetailSlice = createSlice({
         error: action.payload,
       };
     },
-    // vechicleListRequest(state, action) {
-    //   return {
-    //     ...state,
-    //     loading: true,
-    //   };
-    // },
-    // vechicleListSuccess(state, action) {
-    //   return {
-    //     ...state,
-    //     loading: false,
-    //     addVechicle: action.payload.addvechicle,
-    //   };
-    // },
-    // vechicleListFail(state, action) {
-    //   return {
-    //     loading: false,
-    //     error: action.payload,
-    //   };
-    // },
   },
 });
 

@@ -49,8 +49,14 @@ export const updateVehicleList = (id, vehicleListData) => async (dispatch) => {
     dispatch(updateVehicleListRequest());
     const { data } = await axios.put(
       `http://localhost:4000/vehicle/update_vehicle/${id}`,
-      vehicleListData
+      vehicleListData,
+      {
+        headers: {
+          "Content-type": "multipart/form-data",
+        },
+      }
     );
+    console.log(data);
     dispatch(updateVehicleListSuccess(data));
   } catch (error) {
     //handle error

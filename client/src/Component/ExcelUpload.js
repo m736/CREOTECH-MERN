@@ -16,7 +16,7 @@ function ExcelUpload() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [rows, setRows] = useState([]);
   const dispatch = useDispatch();
-  const { vechicle = [], requiredFields } = useSelector(
+  const { misvehicle_list = [], requiredFields } = useSelector(
     (state) => state.VechicleDetailState
   );
   const fetchData = useCallback(async () => {
@@ -80,7 +80,7 @@ function ExcelUpload() {
         setLoading(false);
         return;
       }
-      const jokeList = vechicle || [];
+      const jokeList = misvehicle_list || [];
       const jokes = excelRows.map((obj) => ({
         _id: jokeList.find((x) => x.slipno === obj["Slip No"])?._id,
         jokeId: obj["ID"] || "",

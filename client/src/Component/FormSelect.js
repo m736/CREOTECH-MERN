@@ -13,13 +13,13 @@ const FormSelect = (props) => {
   const [data, setData] = useState({});
   const [dateRange, setDateRange] = useState([]);
   const [errmsg, setErrorMsg] = useState("");
-  const { vechicle = [], loading } = useSelector(
+  const { misvehicle_list = [], loading } = useSelector(
     (state) => state.VechicleDetailState
   );
-  const uniquevechicle = removeDuplicateObjects(vechicle, "vechicle_no");
+  const uniquevechicle = removeDuplicateObjects(misvehicle_list, "vechicle_no");
 
   //  start selected company concept for select all and unselectall
-  const uniqueCompany = removeDuplicateObjects(vechicle, "company");
+  const uniqueCompany = removeDuplicateObjects(misvehicle_list, "company");
   const x = Array.from(
     uniqueCompany.map((x, y) => ({
       title: `${y + 1}. ${x.company}`,

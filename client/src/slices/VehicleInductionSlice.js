@@ -65,9 +65,11 @@ const authSlice = createSlice({
       };
     },
     updateVehicleListSuccess(state, action) {
+      console.log(action);
       return {
         loading: false,
-        vehiclelist: action.payload,
+        vehiclelist: action.payload.vehicleList,
+        isVehicleListUpdated: true,
       };
     },
     updateVehicleListFail(state, action) {
@@ -75,6 +77,12 @@ const authSlice = createSlice({
         ...state,
         loading: false,
         error: action.payload,
+      };
+    },
+    clearUpdateVehicleListCreated(state, action) {
+      return {
+        ...state,
+        isVehicleListUpdated: false,
       };
     },
     clearError(state, action) {
@@ -96,6 +104,7 @@ export const {
   updateVehicleListSuccess,
   updateVehicleListFail,
   clearAddVehicleCreated,
+  clearUpdateVehicleListCreated,
   clearError,
 } = actions;
 

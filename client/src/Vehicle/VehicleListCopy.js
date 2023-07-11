@@ -30,11 +30,53 @@ const EditableCell = ({
   children,
   ...restProps
 }) => {
+  // const filename = record?.PCC;
+  // const imagefile = filename?.substring(
+  //   filename?.lastIndexOf("/") + 1,
+  //   filename?.length
+  // );
+
+  const [fileList, setFileList] = useState([]);
+  const handleChange = (info) => {
+    let newFileList = [...info.fileList];
+
+    newFileList = newFileList.slice(-1);
+    newFileList = newFileList.map((file) => {
+      if (file.response) {
+        file.url = file.response.url;
+      }
+      return file;
+    });
+    setFileList(newFileList);
+  };
+  console.log(fileList);
+  const props = {
+    onChange: handleChange,
+    multiple: true,
+  };
+  const getFile = (e) => {
+    console.log("Upload event:", e?.fileList[0]?.originFileObj);
+
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e?.fileList[0]?.originFileObj;
+  };
   const inputNode =
-    inputType !== "text" ? (
-      <Upload>
-        <Button>Upload</Button>
-      </Upload>
+    inputType === "file" ? (
+      <>
+        <Form.Item
+          name={dataIndex}
+          style={{
+            margin: 0,
+          }}
+          getValueFromEvent={getFile}
+        >
+          <Upload showUploadList={true} {...props}>
+            <Button>Upload</Button>
+          </Upload>
+        </Form.Item>
+      </>
     ) : (
       <Input />
     );
@@ -64,7 +106,8 @@ const EditableCell = ({
 const VehicleList = () => {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
-  const fetchVehicleListData = useCallback(async () => {
+
+  const fetchVehicleListData = async () => {
     try {
       dispatch(getVehicleListRequest());
       const { data } = await axios.get(
@@ -84,10 +127,10 @@ const VehicleList = () => {
     } catch (error) {
       dispatch(getVehicleListFail());
     }
-  }, [dispatch]);
+  };
   useEffect(() => {
     fetchVehicleListData();
-  }, [fetchVehicleListData]);
+  }, []);
 
   const [form] = Form.useForm();
 
@@ -110,17 +153,15 @@ const VehicleList = () => {
   const save = async (key) => {
     try {
       const row = await form.validateFields();
-      console.log(row);
       const formData = new FormData();
       formData.append("vehicle_regnumber", row.Registration_No);
       formData.append("vehicle_type", row.Vehicle_Type);
       formData.append("vehicle_model", row.Model);
+      formData.append("vehicle_puc", row.PCC);
       dispatch(updateVehicleList(key, formData));
       const newData = [...data];
       const index = newData.findIndex((item) => key === item.key);
-      console.log(index);
       if (index > -1) {
-        console.log("index less than -1");
         const item = newData[index];
         newData.splice(index, 1, {
           ...item,
@@ -155,6 +196,7 @@ const VehicleList = () => {
       dataIndex: "PCC",
       maxWidth: 50,
       render: (t, r) => <Image src={r.PCC} />,
+      editable: true,
     },
 
     {
@@ -196,19 +238,18 @@ const VehicleList = () => {
     if (!col.editable) {
       return col;
     }
-    console.log(col);
+
     return {
       ...col,
       onCell: (record) => ({
         record,
-
+        inputType: col.dataIndex === "PCC" ? "file" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
       }),
     };
   });
-  console.log(mergedColumns?.onCell);
   return (
     <>
       <div className="container">

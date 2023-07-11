@@ -48,8 +48,6 @@ const AdvancedSearchForm = () => {
     padding: 24,
   };
   const getFile = (e) => {
-    console.log("Upload event:", e?.fileList[0]?.originFileObj);
-
     if (Array.isArray(e)) {
       return e;
     }
@@ -82,6 +80,7 @@ const AdvancedSearchForm = () => {
     formData.append("vehicle_taxdate_exp", newvalue.TaxDate);
     formData.append("vehicle_fitnessdate_exp", newvalue.FitnessDate);
     formData.append("vehicle_insurancedate_exp", newvalue.InsuranceDate);
+    formData.append("vehicle_puc", newvalue.vehicle_puc);
     formData.append("driver_name", newvalue.driver_name);
     formData.append("driver_dob", newvalue.DriverDOB);
     formData.append("driver_address", newvalue.driver_address);
@@ -111,7 +110,7 @@ const AdvancedSearchForm = () => {
       "driver_badgefile_upload",
       newvalue.driver_badgefile_upload?.file?.originFileObj
     );
-    formData.append("vehicle_puc", newvalue.vehicle_puc);
+
     try {
       dispatch(addVehicleRequest());
       const { data } = await axios.post(
@@ -136,7 +135,7 @@ const AdvancedSearchForm = () => {
         position: toast.POSITION.BOTTOM_CENTER,
         onOpen: () => dispatch(clearAddVehicleCreated()),
       });
-      navigate("/vechicle-list");
+      navigate("/vehicle_list");
       return;
     }
 
@@ -152,6 +151,18 @@ const AdvancedSearchForm = () => {
     }
   }, [isVehicleListCreated, error, dispatch]);
 
+  const handleChange = (info) => {
+    let newFileList = [...info.fileList];
+
+    newFileList = newFileList.slice(-1);
+    newFileList = newFileList.map((file) => {
+      if (file.response) {
+        file.url = file.response.url;
+      }
+      return file;
+    });
+    setFileList(newFileList);
+  };
   return (
     <>
       <div className="container">
@@ -243,13 +254,12 @@ const AdvancedSearchForm = () => {
                 getValueFromEvent={getFile}
               >
                 <Upload
-                  customRequest={(info) => {
-                    setFileList([info.file]);
-                  }}
-                  showUploadList={false}
+                  maxCount={1}
+                  showUploadList={true}
+                  onChange={handleChange}
+                  fileList={fileList}
                 >
                   <Button icon={<UploadOutlined />}>Click to upload</Button>
-                  {fileList[0]?.name}
                 </Upload>
               </Form.Item>
             </Col>
