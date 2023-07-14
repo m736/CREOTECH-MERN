@@ -7,7 +7,7 @@ mongoose
     useNewUrlParser: "true",
     useUnifiedTopology: "true",
   })
-  .then(() => console.log("Database connected"))
+  .then(() => console.log("Database connected", process.env.MONGODB_URI))
   .catch((err) => console.log("Database connection error: ", err));
 
 mongoose.Promise = global.Promise;
