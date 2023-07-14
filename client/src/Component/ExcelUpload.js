@@ -22,7 +22,9 @@ function ExcelUpload() {
   const fetchData = useCallback(async () => {
     try {
       dispatch(vechicleRequest());
-      const { data } = await axios.get("http://localhost:4000/api/v1/jokes");
+      const { data } = await axios.get(
+        "https://att-creotech.onrender.com/api/v1/jokes"
+      );
       setRows(data);
       dispatch(vechicleSuccess(data));
     } catch (error) {
@@ -101,7 +103,7 @@ function ExcelUpload() {
       if (updatedJokes.length) {
         const result = (
           await axios.post(
-            "http://localhost:4000/bulk/jokes-bulk-update",
+            "https://att-creotech.onrender.com/bulk/jokes-bulk-update",
             updatedJokes
           )
         ).data;
@@ -112,7 +114,7 @@ function ExcelUpload() {
       if (newJokes.length) {
         const result = (
           await axios.post(
-            "http://localhost:4000/bulk/jokes-bulk-insert",
+            "https://att-creotech.onrender.com/bulk/jokes-bulk-insert",
             newJokes
           )
         ).data;

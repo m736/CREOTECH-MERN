@@ -108,7 +108,7 @@ const VehicleList = () => {
     try {
       dispatch(getVehicleListRequest());
       const { data } = await axios.get(
-        "http://localhost:4000/api/v1/vehicle_list"
+        "https://att-creotech.onrender.com/api/v1/vehicle_list"
       );
 
       dispatch(getVehicleListSuccess(data));
