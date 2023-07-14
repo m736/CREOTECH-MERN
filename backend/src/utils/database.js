@@ -1,8 +1,9 @@
+const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 
 mongoose.set("strictQuery", true);
 mongoose
-  .connect("mongodb://0.0.0.0:27017/monprojectWee", {
+  .connect(process.env.MONGODB_URI, {
     useNewUrlParser: "true",
     useUnifiedTopology: "true",
   })
