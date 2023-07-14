@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import "./App.css";
 import ExcelUpload from "./Component/ExcelUpload";
 import NavBar from "./Component/NavBar";
@@ -13,9 +13,9 @@ import {
 } from "./slices/VechicleDetailSlice";
 import axios from "axios";
 import VehicleList from "./Vehicle/VehicleList";
-
 import AddVehicleList from "./Vehicle/AddVehicleList";
 import { ToastContainer, toast } from "react-toastify";
+
 function App() {
   const [rows, setRows] = useState([]);
   const dispatch = useDispatch();
@@ -33,25 +33,23 @@ function App() {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, []);
 
   return (
-    <>
-      <BrowserRouter>
+    <BrowserRouter>
+      <div className="flex">
         <NavBar />
-
-        <div className="pages">
+        <div className="px-3 pt-20 w-4/5">
           <ToastContainer theme="dark" />
           <Routes>
             <Route exact path="/" element={<ExcelUpload />} />
             <Route path="/tabledata" element={<FormSelect />} />
             <Route path="/add_vechicle" element={<AddVehicleList />} />
             <Route path="/vehicle_list" element={<VehicleList />} />
-            {/* <Route path="/update_vehicle/:id" element={<UpdateVehicleList />} /> */}
           </Routes>
         </div>
-      </BrowserRouter>
-    </>
+      </div>
+    </BrowserRouter>
   );
 }
 

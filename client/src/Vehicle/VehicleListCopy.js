@@ -49,14 +49,11 @@ const EditableCell = ({
     });
     setFileList(newFileList);
   };
-  console.log(fileList);
   const props = {
     onChange: handleChange,
     multiple: true,
   };
   const getFile = (e) => {
-    console.log("Upload event:", e?.fileList[0]?.originFileObj);
-
     if (Array.isArray(e)) {
       return e;
     }

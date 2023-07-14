@@ -132,7 +132,6 @@ const FormSelect = (props) => {
       setErrorMsg("please choose date and vechicle no or company name");
     }
   };
-  console.log(data);
   return (
     <>
       <div className="container">
@@ -197,7 +196,10 @@ const FormSelect = (props) => {
                 </Form.Item>
                 <Form.Item shouldUpdate>
                   {() => (
-                    <Button type="primary" htmlType="submit">
+                    <Button
+                      className="bg-blue-500 text-white hover:bg-blue-600"
+                      htmlType="submit"
+                    >
                       Search
                     </Button>
                   )}

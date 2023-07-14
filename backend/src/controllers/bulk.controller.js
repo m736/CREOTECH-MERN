@@ -53,7 +53,6 @@ router.post("/jokes-bulk-update", async (req, res, next) => {
 router.post("/vechicle-attendance-list", async (req, res, next) => {
   try {
     const jokes = req.body;
-    console.log(jokes);
     var singlePerson;
     const arr1 = jokes.example.vechicle_no?.length || 0;
     const arr2 = jokes.example.company?.length || 0;
@@ -114,7 +113,6 @@ router.post("/vechicle-attendance-list", async (req, res, next) => {
       }).exec();
     }
 
-    console.log(singlePerson.length);
     return res.json(singlePerson);
   } catch (err) {
     console.error("vechicle-attendance-list error: ", err);
@@ -138,7 +136,6 @@ router.post("/company-vice-list", async (req, res, next) => {
       ],
     }).exec();
 
-    console.log(singlePerson);
     return res.json(singlePerson);
   } catch (err) {
     console.error("company-vice-list error: ", err);

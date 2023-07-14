@@ -19,8 +19,6 @@ const upload = multer({ storage: storage });
 router.post(
   "/addvehicle",
   catchAsyncError(async (req, res, next) => {
-    console.log(req.body);
-
     const addvehicle = await AddVehicle.create({
       regnumber,
       model,

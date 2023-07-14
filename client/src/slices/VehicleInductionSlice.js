@@ -65,7 +65,6 @@ const authSlice = createSlice({
       };
     },
     updateVehicleListSuccess(state, action) {
-      console.log(action);
       return {
         loading: false,
         vehiclelist: action.payload.vehicleList,

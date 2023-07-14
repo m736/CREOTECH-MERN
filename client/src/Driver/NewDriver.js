@@ -23,14 +23,11 @@ const DriverDetailForm = () => {
   const [driverphoto, setDriverPhoto] = useState([]);
   const pccChange = (e) => {
     setPccChecked(e.target.checked);
-    console.log(`checked = ${e.target.checked}`);
   };
   const InsuranceChange = (e) => {
     setInsurancechecked(e.target.checked);
   };
   const getFile = (e) => {
-    console.log("Upload event:", e);
-
     if (Array.isArray(e)) {
       return e;
     }

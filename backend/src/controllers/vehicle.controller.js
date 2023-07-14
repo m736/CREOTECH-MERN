@@ -124,6 +124,8 @@ router.put(
       {
         new: true,
         runValidators: true,
+        upsert: true,
+        timestamps: { createdAt: false, updatedAt: true },
       }
     );
     // console.log(vehicleList);

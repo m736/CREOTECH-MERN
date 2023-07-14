@@ -4,8 +4,6 @@ import NewDriver from "./NewDriver";
 const AddDriver = () => {
   const [value, setValue] = useState();
   const DriverSelection = (e) => {
-    console.log("radio checked", e.target.value);
-    console.log();
     setValue(e.target.value);
   };
   const onChange = (value) => {

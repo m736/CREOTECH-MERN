@@ -158,7 +158,14 @@ const VehicleList = () => {
           TaxDate: vehicle.vehicle_taxdate_exp,
           FitnessDate: vehicle.vehicle_fitnessdate_exp,
           InsuranceDate: vehicle.vehicle_insurancedate_exp,
-          Created: moment(new Date(vehicle.createdAt)).format("DD-MM-YYYY"),
+          Created: moment
+            .utc(vehicle.createdAt)
+            .local()
+            .format("DD-MM-YYYY hh:mm A"),
+          Updated: moment
+            .utc(vehicle.updatedAt)
+            .local()
+            .format("DD-MM-YYYY hh:mm A"),
         }))
       );
       setEditingKey("");
@@ -181,6 +188,7 @@ const VehicleList = () => {
       formData.append("vehicle_clientname", row.ClientName);
       formData.append("vehicle_puc", row.PUC);
       formData.append("vehicle_created", row.Created);
+      formData.append("vehicle_updated", row.Updated);
       formData.append("vehicle_regdate_exp", row.RegDate);
       formData.append("vehicle_taxdate_exp", row.TaxDate);
       formData.append("vehicle_fitnessdate_exp", row.FitnessDate);
@@ -236,27 +244,27 @@ const VehicleList = () => {
     {
       title: "Client_name",
       dataIndex: "ClientName",
-      editable: true,
+      // editable: true,
     },
     {
       title: "Regdate_Exp",
       dataIndex: "RegDate",
-      editable: true,
+      // editable: true,
     },
     {
       title: "Taxdate_Exp",
       dataIndex: "TaxDate",
-      editable: true,
+      // editable: true,
     },
     {
       title: "Fitnessdate_Exp",
       dataIndex: "FitnessDate",
-      editable: true,
+      // editable: true,
     },
     {
       title: "Insurancedate_Exp",
       dataIndex: "InsuranceDate",
-      editable: true,
+      // editable: true,
     },
     {
       title: "PUC",
@@ -277,6 +285,10 @@ const VehicleList = () => {
     {
       title: "Created At",
       dataIndex: "Created",
+    },
+    {
+      title: "Updated At",
+      dataIndex: "Updated",
     },
     {
       title: "operation",
@@ -329,7 +341,7 @@ const VehicleList = () => {
   return (
     <>
       <div className="container">
-        <h1 className="text-black text-">Vehicle List</h1>
+        <h1 className="text-black">Vehicle List</h1>
         <Form form={form} component={false}>
           <Table
             components={{

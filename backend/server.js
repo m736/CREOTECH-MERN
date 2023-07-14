@@ -14,16 +14,12 @@ const errorHandler = require("src/middleware/error-handler");
 // // Initial Config
 const app = express();
 const port = process.env.SERVER_PORT;
-console.log(port);
 // // Middleware
 app.use(
   bodyParser.json({
     limit: "50mb",
   })
 );
-console.log(__dirname);
-// const dir = path.join(__dirname, "uploads");
-// console.log(dir);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());

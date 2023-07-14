@@ -54,7 +54,6 @@ const AdvancedSearchForm = () => {
     return e && e?.fileList[0]?.originFileObj;
   };
   const onFinish = async (values) => {
-    console.log(values);
     const dob = values.driver_dob;
     const badgexp = values.driver_badge_exp;
     const licencexp = values.driver_licence_exp;

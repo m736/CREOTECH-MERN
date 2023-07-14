@@ -61,6 +61,7 @@ function ExcelUpload() {
       };
       reader.readAsArrayBuffer(file);
     }
+
     setExcelRows([]);
   };
   const uploadData = async () => {
@@ -125,6 +126,9 @@ function ExcelUpload() {
       setLoading(false);
       console.log("uploadData error: ", error);
     }
+
+    setExcelRows([]);
+    // window.location.reload();
   };
   const removeFile = () => {
     setSelectedFile(null);
@@ -141,42 +145,54 @@ function ExcelUpload() {
           </Spin>
         </div>
       )}
-
-      <div className="container">
-        <h3 className="mt-4 mb-4">Upload Mis Document</h3>
-        <Row>
-          <Col md="6 text-left">
-            <FormGroup>
-              <Input
-                id="inputEmpGroupFile"
-                name="file"
-                type="file"
-                disabled={loading}
-                onChange={readUploadFile}
-                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-              />
-              <FormText>
-                {
-                  "NOTE: The headers in the Excel file should be as follows!. => "
-                }
-                {requiredFields.join(", ")}
-              </FormText>
-            </FormGroup>
-          </Col>
-          <Col md="6 text-left">
-            {selectedFile?.name && excelRows.length ? (
-              <Button disabled={loading} color="success" onClick={uploadData}>
-                {"Upload data"}
-              </Button>
-            ) : null}{" "}
-            {selectedFile?.name && excelRows.length ? (
-              <Button disabled={loading} color="danger" onClick={removeFile}>
-                {"Remove file"}
-              </Button>
-            ) : null}
-          </Col>
-        </Row>
-      </div>
+      <h1 className="text-black mt-5 mb-10 text-2xl">Upload MIS Data</h1>
+      <form>
+        <div className="grid grid-cols-2">
+          <div>
+            <input
+              type="file"
+              name="file"
+              disabled={loading}
+              onChange={readUploadFile}
+              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+              className="file:bg-gradient-to-b file:from-blue-500 file:to-blue-600
+     file:px-6 file:py-3 file:m-2 file:border-none file:rounded-full file:text-white
+     file:cursor-pointer file:shadow-sm file:shadow-blue-600/50
+     bg-gradient-to-br from-gray-600 to-gray-700 text-white rounded-full
+     cursor-pointer
+     shadow-xl shadow-gray-700/60 w-full
+     "
+            />
+            <div className="text-sm pt-5">
+              {" "}
+              {"NOTE: The headers in the Excel file should be as follows!. => "}
+              {requiredFields.join(", ")}
+            </div>
+          </div>
+          <div>
+            <div class="inline-flex ml-24">
+              {selectedFile?.name && excelRows.length ? (
+                <button
+                  class="bg-blue-500 hover:bg-blue-900 text-white py-3 px-4 rounded"
+                  disabled={loading}
+                  onClick={uploadData}
+                >
+                  UploadMISData
+                </button>
+              ) : null}{" "}
+              {selectedFile?.name && excelRows.length ? (
+                <button
+                  class="bg-red-500 hover:bg-red-900 text-white py-3 px-4 ml-3 rounded"
+                  disabled={loading}
+                  onClick={removeFile}
+                >
+                  Remove
+                </button>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </form>
     </Fragment>
   );
 }
